@@ -1,6 +1,13 @@
 import { useState, useEffect } from "react";
 import { motion } from "motion/react";
-import { Search, Sparkles, ArrowRight, MapPin, ShieldCheck, Zap } from "lucide-react";
+import {
+  Search,
+  Sparkles,
+  ArrowRight,
+  MapPin,
+  ShieldCheck,
+  Zap,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { RoomCard } from "../components/RoomCard";
 import axios from "axios";
@@ -42,23 +49,25 @@ export function Home() {
               Dành riêng cho sinh viên DTHU
             </span>
             <h1 className="text-5xl md:text-7xl font-extrabold text-slate-900 mb-8 leading-tight">
-              Tìm phòng trọ <span className="text-blue-600">lý tưởng</span> <br />
-              với sự hỗ trợ của <span className="relative">
+              Tìm phòng trọ <span className="text-blue-600">lý tưởng</span>{" "}
+              <br />
+              với sự hỗ trợ của{" "}
+              <span className="relative">
                 AI
                 <Sparkles className="absolute -top-6 -right-8 text-amber-400 w-10 h-10" />
               </span>
             </h1>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto mb-12 leading-relaxed">
-              Nest AI giúp tân sinh viên Đại học Đồng Tháp tìm kiếm phòng trọ an toàn, 
-              phù hợp ngân sách và gần trường chỉ trong vài giây.
+              Nest AI giúp tân sinh viên Đại học Đồng Tháp tìm kiếm phòng trọ an
+              toàn, phù hợp ngân sách và gần trường chỉ trong vài giây.
             </p>
 
             <div className="max-w-3xl mx-auto bg-white p-2 rounded-2xl shadow-2xl shadow-blue-100 flex flex-col md:flex-row gap-2 border border-slate-100">
               <div className="flex-grow flex items-center px-4 gap-3 border-b md:border-b-0 md:border-r border-slate-100 py-3">
                 <MapPin className="text-blue-500" size={20} />
-                <input 
-                  type="text" 
-                  placeholder="Khu vực (Phường 6, Phường 4...)" 
+                <input
+                  type="text"
+                  placeholder="Khu vực (Phường 6, Phường 4...)"
                   className="w-full outline-none text-slate-700 font-medium"
                 />
               </div>
@@ -71,7 +80,7 @@ export function Home() {
                   <option>Trên 2 triệu</option>
                 </select>
               </div>
-              <Link 
+              <Link
                 to="/search"
                 className="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-blue-700 transition-all shadow-lg shadow-blue-200"
               >
@@ -90,18 +99,18 @@ export function Home() {
             {
               icon: <Sparkles className="text-amber-500" />,
               title: "Gợi ý thông minh",
-              desc: "AI phân tích nhu cầu để đưa ra danh sách phòng phù hợp nhất với bạn."
+              desc: "AI phân tích nhu cầu để đưa ra danh sách phòng phù hợp nhất với bạn.",
             },
             {
               icon: <ShieldCheck className="text-green-500" />,
               title: "An toàn tuyệt đối",
-              desc: "Các phòng trọ đều được xác thực thông tin, đảm bảo an toàn cho sinh viên."
+              desc: "Các phòng trọ đều được xác thực thông tin, đảm bảo an toàn cho sinh viên.",
             },
             {
               icon: <MapPin className="text-blue-500" />,
               title: "Gần trường học",
-              desc: "Dễ dàng tìm thấy các phòng trọ trong bán kính 2km quanh ĐH Đồng Tháp."
-            }
+              desc: "Dễ dàng tìm thấy các phòng trọ trong bán kính 2km quanh ĐH Đồng Tháp.",
+            },
           ].map((f, i) => (
             <motion.div
               key={i}
@@ -111,7 +120,9 @@ export function Home() {
               <div className="w-14 h-14 bg-slate-50 rounded-2xl flex items-center justify-center mb-6">
                 {f.icon}
               </div>
-              <h3 className="text-xl font-bold text-slate-800 mb-3">{f.title}</h3>
+              <h3 className="text-xl font-bold text-slate-800 mb-3">
+                {f.title}
+              </h3>
               <p className="text-slate-600 leading-relaxed">{f.desc}</p>
             </motion.div>
           ))}
@@ -122,23 +133,33 @@ export function Home() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="flex justify-between items-end mb-12">
           <div>
-            <h2 className="text-3xl font-bold text-slate-900 mb-4">Phòng trọ nổi bật</h2>
-            <p className="text-slate-600">Những lựa chọn tốt nhất dành cho bạn trong tuần này.</p>
+            <h2 className="text-3xl font-bold text-slate-900 mb-4">
+              Phòng trọ nổi bật
+            </h2>
+            <p className="text-slate-600">
+              Những lựa chọn tốt nhất dành cho bạn trong tuần này.
+            </p>
           </div>
-          <Link to="/search" className="text-blue-600 font-bold flex items-center gap-1 hover:gap-2 transition-all">
+          <Link
+            to="/search"
+            className="text-blue-600 font-bold flex items-center gap-1 hover:gap-2 transition-all"
+          >
             Xem tất cả <ArrowRight size={20} />
           </Link>
         </div>
 
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[1, 2, 3].map(i => (
-              <div key={i} className="h-80 bg-slate-100 animate-pulse rounded-2xl" />
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="h-80 bg-slate-100 animate-pulse rounded-2xl"
+              />
             ))}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {featuredRooms.map(room => (
+            {featuredRooms.map((room) => (
               <RoomCard key={room.id} room={room} />
             ))}
           </div>
@@ -155,10 +176,10 @@ export function Home() {
               Hãy để AI giúp bạn!
             </h2>
             <p className="text-blue-100 text-lg mb-12 leading-relaxed">
-              Chỉ cần nhập ngân sách và sở thích, hệ thống trí tuệ nhân tạo của chúng tôi 
-              sẽ tìm ra căn phòng hoàn hảo nhất dành riêng cho bạn.
+              Chỉ cần nhập ngân sách và sở thích, hệ thống trí tuệ nhân tạo của
+              chúng tôi sẽ tìm ra căn phòng hoàn hảo nhất dành riêng cho bạn.
             </p>
-            <Link 
+            <Link
               to="/ai-recommend"
               className="bg-white text-blue-600 px-10 py-5 rounded-2xl font-bold text-lg hover:bg-blue-50 transition-all inline-flex items-center gap-3 shadow-xl"
             >

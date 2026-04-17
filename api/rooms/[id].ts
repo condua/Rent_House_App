@@ -18,4 +18,4 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   return res.json(room);
-}s
+}
