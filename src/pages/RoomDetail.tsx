@@ -1,6 +1,19 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { MapPin, Ruler, Wifi, Wind, ShieldCheck, Phone, User, ArrowLeft, Share2, Heart, Star, Mail } from "lucide-react";
+import {
+  MapPin,
+  Ruler,
+  Wifi,
+  Wind,
+  ShieldCheck,
+  Phone,
+  User,
+  ArrowLeft,
+  Share2,
+  Heart,
+  Star,
+  Mail,
+} from "lucide-react";
 import axios from "axios";
 import { motion } from "motion/react";
 
@@ -13,9 +26,15 @@ export function RoomDetail() {
     const fetchRoom = async () => {
       try {
         const res = await axios.get(`/api/rooms/${id}`);
-        setRoom(res.data);
+        // Kiểm tra an toàn xem data có tồn tại không trước khi set
+        if (res && res.data) {
+          setRoom(res.data);
+        } else {
+          setRoom(null);
+        }
       } catch (err) {
-        console.error(err);
+        console.error("Lỗi fetch dữ liệu phòng:", err);
+        setRoom(null); // Đảm bảo component biết là không có data nếu lỗi mạng
       } finally {
         setLoading(false);
       }
@@ -23,23 +42,34 @@ export function RoomDetail() {
     fetchRoom();
   }, [id]);
 
-  if (loading) return (
-    <div className="max-w-7xl mx-auto px-4 py-20 text-center">
-      <div className="animate-spin w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
-      <p className="text-slate-500 font-medium">Đang tải thông tin phòng...</p>
-    </div>
-  );
+  if (loading)
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-20 text-center">
+        <div className="animate-spin w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
+        <p className="text-slate-500 font-medium">
+          Đang tải thông tin phòng...
+        </p>
+      </div>
+    );
 
-  if (!room) return (
-    <div className="max-w-7xl mx-auto px-4 py-20 text-center">
-      <h2 className="text-2xl font-bold text-slate-800 mb-4">Không tìm thấy phòng trọ này</h2>
-      <Link to="/search" className="text-blue-600 font-bold underline">Quay lại tìm kiếm</Link>
-    </div>
-  );
+  if (!room)
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-20 text-center">
+        <h2 className="text-2xl font-bold text-slate-800 mb-4">
+          Không tìm thấy phòng trọ này
+        </h2>
+        <Link to="/search" className="text-blue-600 font-bold underline">
+          Quay lại tìm kiếm
+        </Link>
+      </div>
+    );
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <Link to="/search" className="inline-flex items-center gap-2 text-slate-500 hover:text-blue-600 font-medium mb-8 transition-colors">
+      <Link
+        to="/search"
+        className="inline-flex items-center gap-2 text-slate-500 hover:text-blue-600 font-medium mb-8 transition-colors"
+      >
         <ArrowLeft size={20} />
         Quay lại danh sách
       </Link>
@@ -48,9 +78,9 @@ export function RoomDetail() {
         {/* Left Content */}
         <div className="lg:col-span-2">
           <div className="relative rounded-3xl overflow-hidden shadow-2xl mb-12">
-            <img 
-              src={room.image} 
-              alt={room.title} 
+            <img
+              src={room?.image || "https://picsum.photos/800/600"}
+              alt={room?.title || "Phòng trọ"}
               className="w-full aspect-video object-cover"
               referrerPolicy="no-referrer"
             />
@@ -67,15 +97,24 @@ export function RoomDetail() {
           <div className="bg-white rounded-3xl p-8 md:p-12 border border-slate-100 shadow-sm mb-12">
             <div className="flex flex-wrap justify-between items-start gap-6 mb-8">
               <div>
-                <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">{room.title}</h1>
+                <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+                  {room?.title || "Đang cập nhật..."}
+                </h1>
                 <div className="flex items-center gap-2 text-slate-500">
                   <MapPin size={18} className="text-blue-600" />
-                  <span className="text-lg">{room.address}</span>
+                  <span className="text-lg">
+                    {room?.address || "Đang cập nhật..."}
+                  </span>
                 </div>
               </div>
               <div className="bg-blue-50 px-6 py-4 rounded-2xl text-center">
-                <span className="block text-blue-600 font-bold text-2xl">{room.price.toLocaleString("vi-VN")}đ</span>
-                <span className="text-blue-400 text-sm font-medium">mỗi tháng</span>
+                {/* SỬA LỖI TO-LOCALE-STRING Ở ĐÂY */}
+                <span className="block text-blue-600 font-bold text-2xl">
+                  {(room?.price || 0).toLocaleString("vi-VN")}đ
+                </span>
+                <span className="text-blue-400 text-sm font-medium">
+                  mỗi tháng
+                </span>
               </div>
             </div>
 
@@ -83,7 +122,9 @@ export function RoomDetail() {
               <div className="bg-slate-50 p-4 rounded-2xl flex flex-col items-center gap-2">
                 <Ruler size={24} className="text-blue-600" />
                 <span className="text-slate-500 text-sm">Khoảng cách</span>
-                <span className="font-bold text-slate-800">{room.distance}km</span>
+                <span className="font-bold text-slate-800">
+                  {room?.distance || 0}km
+                </span>
               </div>
               <div className="bg-slate-50 p-4 rounded-2xl flex flex-col items-center gap-2">
                 <Star size={24} className="text-amber-500" />
@@ -98,33 +139,64 @@ export function RoomDetail() {
               <div className="bg-slate-50 p-4 rounded-2xl flex flex-col items-center gap-2">
                 <User size={24} className="text-indigo-600" />
                 <span className="text-slate-500 text-sm">Loại phòng</span>
-                <span className="font-bold text-slate-800">{room.type === "private" ? "Phòng riêng" : "Ở ghép"}</span>
+                <span className="font-bold text-slate-800">
+                  {room?.type === "private" ? "Phòng riêng" : "Ở ghép"}
+                </span>
               </div>
             </div>
 
             <div className="mb-12">
-              <h3 className="text-2xl font-bold text-slate-800 mb-6">Mô tả chi tiết</h3>
+              <h3 className="text-2xl font-bold text-slate-800 mb-6">
+                Mô tả chi tiết
+              </h3>
               <p className="text-slate-600 leading-relaxed text-lg">
-                {room.description}
+                {room?.description || "Chưa có mô tả chi tiết."}
               </p>
             </div>
 
             <div>
-              <h3 className="text-2xl font-bold text-slate-800 mb-6">Tiện ích đi kèm</h3>
+              <h3 className="text-2xl font-bold text-slate-800 mb-6">
+                Tiện ích đi kèm
+              </h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {[
-                  { id: "wifi", label: "Wifi tốc độ cao", icon: <Wifi size={20} /> },
-                  { id: "air-con", label: "Máy lạnh", icon: <Wind size={20} /> },
-                  { id: "wc-private", label: "WC riêng", icon: <ShieldCheck size={20} /> },
-                  { id: "parking", label: "Chỗ để xe", icon: <MapPin size={20} /> },
-                  { id: "security", label: "Camera an ninh", icon: <ShieldCheck size={20} /> },
-                  { id: "freedom", label: "Giờ giấc tự do", icon: <Ruler size={20} /> }
+                  {
+                    id: "wifi",
+                    label: "Wifi tốc độ cao",
+                    icon: <Wifi size={20} />,
+                  },
+                  {
+                    id: "air-con",
+                    label: "Máy lạnh",
+                    icon: <Wind size={20} />,
+                  },
+                  {
+                    id: "wc-private",
+                    label: "WC riêng",
+                    icon: <ShieldCheck size={20} />,
+                  },
+                  {
+                    id: "parking",
+                    label: "Chỗ để xe",
+                    icon: <MapPin size={20} />,
+                  },
+                  {
+                    id: "security",
+                    label: "Camera an ninh",
+                    icon: <ShieldCheck size={20} />,
+                  },
+                  {
+                    id: "freedom",
+                    label: "Giờ giấc tự do",
+                    icon: <Ruler size={20} />,
+                  },
                 ].map((amenity) => (
-                  <div 
+                  <div
                     key={amenity.id}
                     className={`flex items-center gap-3 p-4 rounded-xl border ${
-                      room.amenities.includes(amenity.id) 
-                        ? "bg-blue-50 border-blue-100 text-blue-700" 
+                      /* BẢO VỆ MẢNG AMENITIES BỊ UNDEFINED */
+                      room?.amenities?.includes(amenity.id)
+                        ? "bg-blue-50 border-blue-100 text-blue-700"
                         : "bg-slate-50 border-slate-100 text-slate-400 opacity-50"
                     }`}
                   >
@@ -140,25 +212,30 @@ export function RoomDetail() {
         {/* Right Sidebar - Contact */}
         <div className="lg:col-span-1">
           <div className="bg-white rounded-3xl p-8 border border-slate-100 shadow-xl sticky top-24">
-            <h3 className="text-xl font-bold text-slate-800 mb-8">Thông tin chủ trọ</h3>
-            
+            <h3 className="text-xl font-bold text-slate-800 mb-8">
+              Thông tin chủ trọ
+            </h3>
+
             <div className="flex items-center gap-4 mb-8">
               <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 font-bold text-2xl">
-                {room.landlordName.charAt(0)}
+                {/* BẢO VỆ LỖI CHAR-AT */}
+                {room?.landlordName ? room.landlordName.charAt(0) : "U"}
               </div>
               <div>
-                <h4 className="font-bold text-slate-900 text-lg">{room.landlordName}</h4>
+                <h4 className="font-bold text-slate-900 text-lg">
+                  {room?.landlordName || "Đang cập nhật"}
+                </h4>
                 <p className="text-slate-500">Chủ trọ đã xác thực</p>
               </div>
             </div>
 
             <div className="space-y-4 mb-8">
-              <a 
-                href={`tel:${room.landlordPhone}`}
+              <a
+                href={`tel:${room?.landlordPhone || ""}`}
                 className="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-blue-700 transition-all shadow-lg shadow-blue-100"
               >
                 <Phone size={20} />
-                {room.landlordPhone}
+                {room?.landlordPhone || "Chưa có SĐT"}
               </a>
               <button className="w-full bg-white border-2 border-blue-600 text-blue-600 py-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-blue-50 transition-all">
                 <Mail size={20} />
@@ -172,9 +249,9 @@ export function RoomDetail() {
                 Vị trí trên bản đồ
               </h4>
               <div className="aspect-square bg-slate-200 rounded-xl overflow-hidden relative">
-                <img 
-                  src={`https://picsum.photos/seed/map/400/400`} 
-                  alt="Map placeholder" 
+                <img
+                  src={`https://picsum.photos/seed/map/400/400`}
+                  alt="Map placeholder"
                   className="w-full h-full object-cover opacity-50 grayscale"
                   referrerPolicy="no-referrer"
                 />
